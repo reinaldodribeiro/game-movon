@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Farm from '../classes/Avatars/Farm/Farm';
 import { Avatar } from '../interfaces/Avatar';
 import { FloorInterface } from '../interfaces/Floor';
 import { ObstaclesInterface } from '../interfaces/Obstacles';
@@ -8,16 +7,22 @@ import Sprint from '../classes/Sprint';
 import PlayImage from '../assets/body/play.png';
 import { makeImage } from '../utils/utils';
 import { SprintInterface } from '../interfaces/Sprint';
+import { CenaryInterface } from '../interfaces/Cenary';
+import Cenary from '../classes/Cenary';
+import Themes from '../classes/Themes/Themes';
 
 export default function Main() {
+
+    const theme = Themes[0];
 
     const PLAY = STATE_GAME.PLAY;
     const PLAYING = STATE_GAME.PLAYING;
     const LOSE = STATE_GAME.LOSE;
-
+    
     let stateGame = PLAY;
     let canvas: any, ctx: any, ALTURA: number, LARGURA: number;
     let record: number;
+    let cenary: CenaryInterface;
     let avatar: Avatar;
     let floor: FloorInterface;
     let obstacles: ObstaclesInterface;
@@ -37,19 +42,21 @@ export default function Main() {
         canvas.width = LARGURA;
         canvas.height = ALTURA;
         canvas.style.backgroudnColor = "black";
-        canvas.style.boxShadow = "#9c7393 10px 20px 30px"
+        canvas.style.boxShadow = `${theme.colorShadow} 10px 20px 30px`
 
         ctx = canvas.getContext("2d");
-        ctx.shadowColor = '#9c7393';
+        ctx.shadowColor = theme.colorShadow;
         ctx.shadowBlur = 3;
         ctx.shadowOffsetX = 3;
         ctx.shadowOffsetY = 3;
         document.body.appendChild(canvas);
         document.addEventListener("mousedown", click);
-        avatar = new Farm(ctx, LARGURA);
-        floor = avatar.floor;
-        obstacles = avatar.obstacles;
-        obstacles.lose = () => {
+
+        cenary = new Cenary(ctx, LARGURA, theme);
+        avatar = cenary.avatar;
+        floor = cenary.floor;
+        obstacles = cenary.obstacles;
+        obstacles.lose =  () => {
             stateGame = LOSE
         };
         
@@ -102,7 +109,7 @@ export default function Main() {
     }
     
     const drawWindow = () => {
-        avatar.bg.draw(0, 0);
+        if(cenary.bg.draw) cenary.bg.draw(0, 0)
     }
 
     const drawScore = () => {
@@ -156,10 +163,10 @@ export default function Main() {
 
     const update = () => {
         avatar.update(stateGame);
-        floor.update(stateGame);
         if(stateGame === PLAYING) {
             obstacles.update();
         }
+        floor.update(stateGame);
     }
 
     useEffect(() => {
@@ -167,6 +174,6 @@ export default function Main() {
     });
 
     return (
-        <div style={{width: "100vw", height: "100vh", backgroundColor: "#ffd57b"}} />
+        <div style={{width: "100vw", height: "100vh", backgroundColor: theme.bgColor}} />
     );
 }

@@ -1,24 +1,39 @@
 import {  SPEED } from '../constantes/Global';
 import { Avatar } from '../interfaces/Avatar';
+import { FloorInterface } from '../interfaces/Floor';
 import { Obs, ObstaclesInterface } from '../interfaces/Obstacles';
-import { SprintInterface } from '../interfaces/Sprint';
+import { ThemeInterface } from '../interfaces/Theme';
+import { makeImage } from '../utils/utils';
+import Sprint from './Sprint';
 
-export default abstract class Obstacles implements ObstaclesInterface {
+export default class Obstacles implements ObstaclesInterface {
 
     _obs;
     items;
     timeInsert;
     ctx;
+    floor;
     LARGURA;
     avatar;
+    lose;
 
-    constructor(ctx: CanvasRenderingContext2D, LARGURA: number, avatar: Avatar) {
+    constructor(ctx: CanvasRenderingContext2D, LARGURA: number, avatar: Avatar, theme: ThemeInterface, floor: FloorInterface) {
         this._obs = [] as Array<Obs>;
-        this.items = [] as Array<SprintInterface>;
+        this.items = theme.obstacles.map(item => {
+            return new Sprint(ctx, {
+                x: 0,
+                y: 0,
+                heigth: item.height,
+                width: item.width,
+                img: makeImage(item.obstacle)
+            });
+        })
         this.ctx = ctx;
         this.timeInsert = 0;
         this.LARGURA = LARGURA; 
         this.avatar = avatar;
+        this.floor = floor;
+        this.lose = () => {};
     }
 
     clean() {
@@ -49,7 +64,9 @@ export default abstract class Obstacles implements ObstaclesInterface {
 
             const cond1 = this.avatar.x < obs.x + obs.width;
             const cond2 = this.avatar.x + this.avatar.width >= obs.x;
-            const cond3 = this.avatar.y + this.avatar.height >=  this.avatar.floor.y - obs.height;
+            const cond3 = this.avatar.y + this.avatar.height >=  this.floor.y - obs.height;
+
+            console.log(cond1, cond2, cond3);
 
             if(cond1 && cond2 && cond3) {
                 this.lose();
@@ -67,11 +84,9 @@ export default abstract class Obstacles implements ObstaclesInterface {
         const size = this._obs.length;
         for(var i = 0;  i < size; i++) {
             const obs: Obs = this._obs[i];
-            const floorWidth = this.avatar.floor.y - obs.height;
+            const floorWidth = this.floor.y - obs.height;
             if(obs.item.draw) obs.item.draw(obs.x, floorWidth);
         }
     }
-
-    abstract lose(): void;
     
 }

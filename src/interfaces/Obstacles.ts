@@ -17,3 +17,9 @@ export interface ObstaclesInterface {
     lose(): void;
     clean(): void;
 }
+
+export interface ItemObstacle {
+    width: number;
+    height: number;
+    obstacle: string;
+}
