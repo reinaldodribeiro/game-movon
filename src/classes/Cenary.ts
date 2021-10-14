@@ -1,6 +1,4 @@
-import { getTextOfJSDocComment } from "typescript";
 import { CenaryInterface } from "../interfaces/Cenary";
-import { FloorInterface } from "../interfaces/Floor";
 import { ThemeInterface } from "../interfaces/Theme";
 import { makeImage } from "../utils/utils";
 import Avatar from "./Avatar";

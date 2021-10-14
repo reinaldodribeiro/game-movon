@@ -62,11 +62,9 @@ export default class Obstacles implements ObstaclesInterface {
             var obs: Obs = this._obs[i];
             obs.x -= SPEED;
 
-            const cond1 = this.avatar.x < obs.x + obs.width;
+            const cond1 = this.avatar.x < obs.x + obs.width - 50 ;
             const cond2 = this.avatar.x + this.avatar.width >= obs.x;
             const cond3 = this.avatar.y + this.avatar.height >=  this.floor.y - obs.height;
-
-            console.log(cond1, cond2, cond3);
 
             if(cond1 && cond2 && cond3) {
                 this.lose();
