@@ -21,15 +21,20 @@ export default class Avatar implements AvatarInterface {
   LARGURA;
   rotation;
 
-  constructor(ctx: CanvasRenderingContext2D, LARGURA: number, avatar: SprintInterface, floor: FloorInterface) {
+  constructor(
+    ctx: CanvasRenderingContext2D,
+    LARGURA: number,
+    avatar: SprintInterface,
+    floor: FloorInterface
+  ) {
     this.x = 50;
     this.y = 0;
     this.color = "#ff4e4e";
-    this.gravity = 1.5;
+    this.gravity = 0.4;
     this.avatar = avatar;
     this.width = avatar.width;
     this.height = avatar.heigth;
-    this.powerJump = 22;
+    this.powerJump = 18;
     this.rotation = 0;
     this.qtdJumps = 0;
     this.speed = 0;
